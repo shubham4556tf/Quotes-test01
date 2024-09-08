@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+ 
+    <title>Home</title>
+    
+    <style>
+        body {
+           
+           
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #2b2b2b;
+            font-family: Arial, sans-serif;
+          }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Nunito", sans-serif;
+            overflow-x: hidden;
+            
+        }
+        @media (max-width: 480px) and (max-height: 800px) {
+            /* Your CSS styles for mobile devices */
+            #container .image-container {
+                height: 40vh;
+                width: 40vh;
+            }
+            /* Add more styles as needed */
+        }
+        #container {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            max-height: 245vw;
+            width: 100vw;
+            padding: 1rem 2px 2px 1.2rem;
+            z-index: 0;
+        }
+
+        .bg-img-div{
+            position: absolute;
+            height: 30vh;
+            width:30vw;
+            background-color:#d3d3d3;
+            z-index: -1;
+          }
+          .bg-img{
+            
+          }
+          .card {
+            background: linear-gradient(to bottom right, #2d2d2d, #000);
+            padding: 20px;
+            border-radius: 15px;
+            width: 300px;
+            color: white;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+            
+          }
+          
+          .quote {
+            font-size: 18px;
+            margin-bottom: 20px;
+            overflow-y:hidden;
+          }
+          
+          .author-info {
+            display: flex;
+            align-items: center;
+            overflow-y:hidden;
+          }
+          
+          .author-info img {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            margin-right: 15px;
+          }
+          
+          .author-text {
+            display: flex;
+            flex-direction: column;
+          }
+          
+          .author-name {
+            font-size: 12px;
+            font-weight: bold;
+            margin: 0;
+          }
+          
+          .author-book {
+            font-size: 12px;
+            margin: 0;
+            color: #a3a3a3;
+          }
+          
+        .vertical-text {
+            display: inline-block;
+            writing-mode: vertical-rl;
+            text-align: center;
+            transform: rotate(180deg);
+        }
+        @media (min-width: 513px) {
+           
+            #mobile{
+                widht:60vw;
+            }
+           
+        }
+       
+        @media (max-width: 512px) {
+            #laptop {
+               
+                display:none;
+                
+            }
+            #mobile{
+                widht:100vw;
+            }
+           
+        }
+        #suggestionsContainer {
+            position: absolute;
+            border: 1px solid #ccc;
+            max-height: 200px;
+            overflow-y: auto;
+            background-color: white;
+            z-index: 1000;
+        }
+        #suggestionsContainer div {
+            padding: 8px;
+            cursor: pointer;
+        }
+        #suggestionsContainer div:hover {
+            background-color: #f0f0f0;
+        }
+        .custom-btn {
+            background-color: #2b2b2b; /* Button background color */
+            color: #ffffff; /* Text color */
+            border: 2px solid #2b2b2b; /* Border color */
+            padding: 10px 20px; /* Adjust padding for smaller button */
+            font-size: 16px; /* Adjust font size */
+        }
+
+    </style>
+</head>
+<body>
+<div style="display:flex;">
+    <div id="mobile" style="display:flex;flex-wrap:wrap;">
+    <div class="position-fixed d-flex flex-column justify-content-center align-items-center"
+         style="top: 0; right: 0; height: 100vh; width: 40px; background-color:red ; border-left: 2px solid #343a40;">
+        <div class="vertical-text">
+            <h1 class="h4">Website Under Maintenance</h1>
+            <p>We'll be back soon with improvements!</p>
+        </div>
+    </div>
+    <input  id="searchInput" type="text" placeholder="Enter author's name" oninput="fetchSuggestions()">
+    <button  style="absolute: fixed;z-index:100;" onclick="searchQuotes()" oninput="fetchSuggestions()" autocomplete="off">Search</button>
+    <div id="suggestionsContainer"></div>
+        
+    <div id="container"  style="border-radius:16px">
+        {% set i = 0 %}
+        {% for key, value in quotes.items() %}
+            {% set i = i + 1 %}
+            <div>
+                <div id="capture-{{ key.replace(' ','').lower() }}" class="card  image-container
+                    {% if loop.index % 8 == 1 %}style1 
+                    {% elif loop.index % 8 == 2 %}style2
+                    {% elif loop.index % 8 == 3 %}style3
+                    {% elif loop.index % 8 == 4 %}style4
+                    {% elif loop.index % 8 == 5 %}style5
+                    {% elif loop.index % 8 == 6 %}style6
+                    {% elif loop.index % 8 == 7 %}style7
+                    {% else %}style8
+                    {% endif %}"
+                    id="{{ key.replace(' ','').lower() }}"> 
+                    <div class="quote">
+                        {{value}}
+                      </div>
+                      <div  id="image-{{ key.replace(' ','').lower() }}" class="author-info">
+                        <img id="image-{{ key.replace(' ','').lower() }}" src="{{ url_for('static', filename=key.replace(' ', '') + '.png') }}" alt="Image">
+                        <div class="author-text">
+                          <p class="author-name">{{key}}</p>
+                        </div>
+                      </div>
+                    
+                </div>
+                
+                <button data-image-id="{{ key.replace(' ','').lower() }}" id='btn-download' class="download-image" data-image-id="{{ key.replace(' ','').lower() }}">Download Image</button>
+                <button class="btn custom-btn whatsapp-share" data-image-id="{{ key.replace(' ','').lower() }}">Share on WhatsApp</button>
+            </div> 
+        {% endfor %}
+    </div>
+    
+    <div id="result"></div>
+</div>
+    <div id="laptop" style="flex-grow:1;background-color:#d3d3d3;" >
+        <div  class="container  mt-5">
+            <div class="alert alert-info">
+                <h4 class="alert-heading">We Are Hiring!</h4>
+                <p class="mb-0">We are looking for talented individuals to fill the following positions:</p>
+                <ul class="list-unstyled mt-3">
+                    <li><i class="fas fa-check-circle"></i> Google Search and AI Image Generator for Content</li>
+                    <li><i class="fas fa-check-circle"></i> Content Finder and Creator</li>
+                    <li><i class="fas fa-check-circle"></i> Social Media Handling</li>
+                    <li><i class="fas fa-check-circle"></i> Web Designer and Developer</li>
+                    <li><i class="fas fa-check-circle"></i> SEO Specialist</li>
+                </ul>
+                <hr>
+                <p class="mb-0">Whether you're just starting out or have advanced skills, we invite you to join our team. Depending on your work and creativity, you may be paid or become a valued member of our team. Don’t hesitate to apply if you're looking to grow your skills or want to be part of a dynamic environment. Congratulations on considering this opportunity!</p>
+            </div>
+        </div>
+
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2>Contact Us</h2>
+                <p>We would love to hear from you. Click the button below to fill out our contact form.</p>
+                <!-- Button that redirects to the Google Form -->
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSd7tHdHg7xBzj_U5B9Te5I6Bb6HvhK7mH4yxT_jjtNrxOfw1Q/viewform" 
+                   class="btn btn-primary btn-lg" target="_blank" role="button">
+                   Fill Out the Form
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2>Quotes not Found !</h2>
+                <p>post Quotes</p>
+                <!-- Button that redirects to the Google Form -->
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSd7tHdHg7xBzj_U5B9Te5I6Bb6HvhK7mH4yxT_jjtNrxOfw1Q/viewform" 
+                   class="btn btn-primary btn-lg" target="_blank" role="button">
+                   Fill Out the Form
+                </a>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+    <script>
+        function searchQuotes(){
+            const searchInput = document.getElementById('searchInput').value.toLowerCase(); // Convert input to lowercase
+            console.log('This is the input you typed:', searchInput);
+
+            fetch(`/data?query_html=${encodeURIComponent(searchInput)}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    
+                    const key = Object.keys(data)[0].toLowerCase(); // Convert key to lowercase
+                    const element = document.getElementById('capture-'+key); // Select the element by id
+        
+                    if (element) {
+                        // Scroll to the element
+                        console.log('This is the element:', element);
+                        element.scrollIntoView({ behavior: 'smooth' });
+                    } else {
+                        console.error('Element not found for:', key);
+                    }
+        
+                    const resultDiv = document.getElementById('result');
+        
+                    if (data.error) {
+                        resultDiv.innerText = data.error;
+                    } else {
+                        // Clear any previous results
+                        resultDiv.innerHTML = '';
+        
+                        // Display the search results
+                        for (const [author, quotes] of Object.entries(data)) {
+                            const authorDiv = document.createElement('div');
+                            authorDiv.innerHTML = `<h3>${author}</h3><p>${quotes.join('<br>')}</p>`;
+                            resultDiv.appendChild(authorDiv);
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+                
+        }
+
+         // Function to handle clicks on cards
+         const container = document.getElementById('container');
+         const allItems = container.querySelectorAll('.card');
+         allItems.forEach(function(item) {
+             item.addEventListener('click', function() {
+                 console.log("Card clicked:",item.id);
+                 window.location.href = `/author/${item.id.toLowerCase()}`; // Convert to lowercase for consistency
+             });
+         });
+
+         // canvas function
+       // Function to add event listeners for download buttons
+function addDownloadListeners() {
+    const downloadButtons = document.querySelectorAll('.download-image');
+    downloadButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            const imageId = button.getAttribute('data-image-id');
+            console.log(imageId)
+            const element = document.getElementById('capture-' + imageId);
+
+            if (element) {
+                html2canvas(element, {
+                    backgroundColor: null,
+                    scale: 2,
+                    useCORS: true,
+                    scrollX: 0,
+                    scrollY: 0,
+                    x: 0,
+                    y: 0,
+                    width: element.clientWidth,
+                    height: element.clientHeight
+                }).then((canvas) => {
+                    const imageURL = canvas.toDataURL('image/png');
+                    const link = document.createElement('a');
+                    link.href = imageURL;
+                    link.download = `${imageId}_image.png`;
+                    link.click();
+                });
+            } else {
+                console.error('Element not found for download:', imageId);
+            }
+        });
+    });
+}
+//suggestion
+   async function fetchSuggestions() {
+            const query = document.getElementById('searchInput').value;
+            if (query.length < 2) {
+                document.getElementById('suggestionsContainer').innerHTML = '';
+                return; // Don't fetch if the query is too short
+            }
+
+            const response = await fetch(`/suggest?query=${encodeURIComponent(query)}`);
+            const suggestions = await response.json();
+
+            const suggestionsContainer = document.getElementById('suggestionsContainer');
+            suggestionsContainer.innerHTML = ''; // Clear existing suggestions
+
+            if (suggestions.length === 0) {
+                return;
+            }
+
+            suggestions.forEach(suggestion => {
+                const div = document.createElement('div');
+                div.textContent = suggestion;
+                div.addEventListener('click', () => {
+                    document.getElementById('searchInput').value = suggestion;
+                    suggestionsContainer.innerHTML = ''; // Clear suggestions
+                });
+                suggestionsContainer.appendChild(div);
+            });
+        }
+
+        // Close suggestions when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!document.getElementById('searchInput').contains(e.target)) {
+                document.getElementById('suggestionsContainer').innerHTML = '';
+            }
+        }); 
+
+// Call the function to add event listeners after loading the content
+document.addEventListener('DOMContentLoaded', addDownloadListeners);
+
+
+        // Event delegation for dynamic buttons
+        document.getElementById('container').addEventListener('click', function(event) {
+           /* if (event.target && event.target.matches('.download-image')) {
+                let imageId = event.target.getAttribute('data-image-id');
+                let imageUrl = document.getElementById(`image-${imageId}`).src;
+                let a = document.createElement("a");
+                a.href = imageUrl;
+                a.download = "quote-image";
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }
+                */
+
+            if (event.target && event.target.matches('.whatsapp-share')) {
+                let imageId = event.target.getAttribute('data-image-id');
+                let imageUrl = document.getElementById(`image-${imageId}`).src;
+                let whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent("Check this image: " + imageUrl)}`;
+                window.open(whatsappUrl, '_blank');
+            }
+        });
+
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+</body>
+</html>
